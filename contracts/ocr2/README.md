@@ -1,0 +1,1 @@
+# Plugin CosmWasm ocr2

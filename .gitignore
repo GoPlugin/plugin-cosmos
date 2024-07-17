@@ -1,0 +1,35 @@
+.direnv
+.vscode/
+.idea
+target/
+artifacts/bin/
+tarpaulin-report.html
+
+# TS
+node_modules
+**/tsconfig.tsbuildinfo
+dist
+.env
+flow-report.json
+report.json
+.envrc
+bin
+
+# test & linter reports
+packages-ts/gauntlet-cosmos-contracts/codeIds/test*
+packages-ts/gauntlet-cosmos-contracts/networks/.env.test*
+tests/e2e/logs
+packages-ts/gauntlet-cosmos-contracts/networks/.env.test*
+integration-tests/logs
+integration-tests/smoke/logs
+integration-tests/soak/logs
+tmp-manifest-*
+/artifacts
+.local-mock-server
+codegen
+devAccounts.json
+*report.xml
+*report.json
+*.out
+*coverage*
+eslint-report.json
