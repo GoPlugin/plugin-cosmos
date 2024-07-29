@@ -15,8 +15,8 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.0
 	github.com/prometheus/client_golang v1.17.0
 	github.com/shopspring/decimal v1.3.1
-	github.com/goplugin/plugin-common v0.1.7-0.20240709155552-d76403db14e5
-	github.com/goplugin/plugin-libocr v0.0.0-20240419185742-fd3cab206b2c
+	github.com/goplugin/plugin-common v0.2.0
+	github.com/goplugin/plugin-libocr v0.0.1
 	github.com/stretchr/testify v1.9.0
 	github.com/tidwall/gjson v1.17.0
 	go.uber.org/ratelimit v0.3.0
