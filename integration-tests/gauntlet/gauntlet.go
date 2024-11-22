@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/goplugin/plugin-testing-framework/gauntlet"
+	"github.com/goplugin/plugin-testing-framework/lib/gauntlet"
 )
 
 var (

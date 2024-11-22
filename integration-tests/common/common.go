@@ -11,11 +11,11 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/stretchr/testify/require"
 
-	"github.com/goplugin/plugin-testing-framework/k8s/environment"
-	"github.com/goplugin/plugin-testing-framework/k8s/pkg/alias"
-	"github.com/goplugin/plugin-testing-framework/k8s/pkg/helm/plugin"
-	"github.com/goplugin/plugin-testing-framework/k8s/pkg/helm/mockserver"
-	mockservercfg "github.com/goplugin/plugin-testing-framework/k8s/pkg/helm/mockserver-cfg"
+	"github.com/goplugin/plugin-testing-framework/lib/k8s/environment"
+	"github.com/goplugin/plugin-testing-framework/lib/k8s/pkg/alias"
+	"github.com/goplugin/plugin-testing-framework/lib/k8s/pkg/helm/plugin"
+	"github.com/goplugin/plugin-testing-framework/lib/k8s/pkg/helm/mockserver"
+	mockservercfg "github.com/goplugin/plugin-testing-framework/lib/k8s/pkg/helm/mockserver-cfg"
 
 	"github.com/goplugin/plugin-cosmos/ops/wasmd"
 )

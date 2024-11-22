@@ -7,7 +7,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 
-	envConf "github.com/goplugin/plugin-testing-framework/k8s/config"
+	envConf "github.com/goplugin/plugin-testing-framework/lib/k8s/config"
 )
 
 // GetTestLogger TODO: This is a duplicate of the same function in plugin-testing-framework. We should replace this with a call to the ctf version when plugin-starknet is updated to use the latest ctf version.

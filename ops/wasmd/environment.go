@@ -5,9 +5,9 @@ import (
 
 	"github.com/rs/zerolog/log"
 
-	"github.com/goplugin/plugin-testing-framework/k8s/client"
-	"github.com/goplugin/plugin-testing-framework/k8s/config"
-	"github.com/goplugin/plugin-testing-framework/k8s/environment"
+	"github.com/goplugin/plugin-testing-framework/lib/k8s/client"
+	"github.com/goplugin/plugin-testing-framework/lib/k8s/config"
+	"github.com/goplugin/plugin-testing-framework/lib/k8s/environment"
 
 	"github.com/goplugin/plugin-cosmos/ops/utils"
 )

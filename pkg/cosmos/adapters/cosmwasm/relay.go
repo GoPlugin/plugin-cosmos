@@ -6,11 +6,12 @@ import (
 
 	cosmosSDK "github.com/cosmos/cosmos-sdk/types"
 
+	"github.com/goplugin/plugin-libocr/offchainreporting2/reportingplugin/median"
+	"github.com/goplugin/plugin-libocr/offchainreporting2/types"
+
 	"github.com/goplugin/plugin-common/pkg/logger"
 	relaytypes "github.com/goplugin/plugin-common/pkg/types"
 	"github.com/goplugin/plugin-common/pkg/utils"
-	"github.com/goplugin/plugin-libocr/offchainreporting2/reportingplugin/median"
-	"github.com/goplugin/plugin-libocr/offchainreporting2/types"
 
 	"github.com/goplugin/plugin-cosmos/pkg/cosmos/adapters"
 	"github.com/goplugin/plugin-cosmos/pkg/cosmos/params"
@@ -145,6 +146,10 @@ func (p *medianProvider) OnchainConfigCodec() median.OnchainConfigCodec {
 	return median.StandardOnchainConfigCodec{}
 }
 
-func (p *medianProvider) ChainReader() relaytypes.ChainReader {
+func (p *medianProvider) ContractReader() relaytypes.ContractReader {
+	return nil
+}
+
+func (p *medianProvider) Codec() relaytypes.Codec {
 	return nil
 }
