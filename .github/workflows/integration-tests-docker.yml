@@ -36,12 +36,12 @@ jobs:
         with:
           repository: goplugin/pluginv3.0
           ref: ${{ env.CUSTOM_CORE_REF || env.DEFAULT_CORE_REF }}
-          path: temp/plugin
+          path: temp/pluginv3.0
 
       - name: Read go version from core .tool-versions
         id: tool_versions
         run: |
-          go_version=$(grep -E '^golang ' temp/plugin/.tool-versions | cut -d' ' -f2)
+          go_version=$(grep -E '^golang ' temp/pluginv3.0/.tool-versions | cut -d' ' -f2)
           echo "GO_VERSION=${go_version}" >> "${GITHUB_OUTPUT}"
 
       - name: Set up Go
@@ -53,14 +53,14 @@ jobs:
         env:
           COMMIT_SHA: ${{ github.event_name == 'push' && github.sha || github.event.pull_request.head.sha }}
         run: |
-          cd temp/plugin
+          cd temp/pluginv3.0
           sed -i -E "/.*\/plugin-cosmos \S+/ s/(.*\/plugin-cosmos) \S+/\1 ${COMMIT_SHA}/g" go.mod
           GIT_PAGER= git diff
           make gomodtidy
 
       - name: Build plugin image
         run: |
-          cd temp/plugin
+          cd temp/pluginv3.0
           docker buildx build --build-arg COMMIT_SHA=$(git rev-parse HEAD) -t local_plugin -f core/plugin.Dockerfile .
 
       - name: Checkout sources

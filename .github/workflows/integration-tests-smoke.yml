@@ -36,7 +36,7 @@ jobs:
         id: check-image
         uses: goplugin/plugin-github-actions/docker/image-exists@e29366cdecfe6befff9ab8c3cfe4825218505d58 # v2.3.16
         with:
-          repository: plugin
+          repository: pluginv3.0
           tag: cosmos.${{ github.sha }}
           AWS_REGION: ${{ secrets.QA_AWS_REGION }}
           AWS_ROLE_TO_ASSUME: ${{ secrets.QA_AWS_ROLE_TO_ASSUME }}

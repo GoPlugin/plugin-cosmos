@@ -115,7 +115,7 @@ func parseEnvVars(cfg *CosmosConfig) error {
 	if value, isPresent := os.LookupEnv("COSMOS_PLI_TOKEN_ADDRESS"); isPresent {
 		address, err := sdk.AccAddressFromBech32(value)
 		if err != nil {
-			return fmt.Errorf("failed to parse the bech32-encoded link token address from '%s': %w", value, err)
+			return fmt.Errorf("failed to parse the bech32-encoded pli token address from '%s': %w", value, err)
 		}
 		cfg.LinkTokenAddress = address
 	}

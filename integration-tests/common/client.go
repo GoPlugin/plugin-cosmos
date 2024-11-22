@@ -13,8 +13,8 @@ import (
 
 	"github.com/goplugin/plugin-testing-framework/lib/k8s/environment"
 	"github.com/goplugin/pluginv3.0/integration-tests/client"
-	"github.com/goplugin/pluginv3.0/v2/core/services/job"
-	"github.com/goplugin/pluginv3.0/v2/core/services/relay"
+	"github.com/goplugin/pluginv3.0/core/services/job"
+	"github.com/goplugin/pluginv3.0/core/services/relay"
 
 	"github.com/goplugin/plugin-cosmos/pkg/cosmos/params"
 )
