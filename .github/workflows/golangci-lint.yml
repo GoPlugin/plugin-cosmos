@@ -1,0 +1,32 @@
+name: golangci-lint
+
+on:
+  push:
+
+jobs:
+  golangci:
+    name: Golang Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: goplugin/tool-versions-to-env-action@v1.0.7
+        id: tool-versions
+      - name: Setup go ${{ steps.tool-versions.outputs.golang_version }}
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ steps.tool-versions.outputs.golang_version }}
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v${{ steps.tool-versions.outputs.golangci-lint_version }}
+          args: --timeout=5m0s --tests=false --out-format checkstyle:golangci-lint-report.xml
+          only-new-issues: true
+      - name: Print lint report artifact
+        if: always()
+        run: test -f golangci-lint-report.xml && cat golangci-lint-report.xml || true
+      - name: Store lint report artifact
+        if: always()
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # v3.1.0
+        with:
+          name: golangci-lint-report
+          path: golangci-lint-report.xml

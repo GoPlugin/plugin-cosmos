@@ -1,0 +1,80 @@
+# Based on https://github.com/actions-rs/example/blob/master/.github/workflows/quickstart.yml
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+
+name: contracts
+
+jobs:
+
+  contracts_unit_tests:
+    name: Contract Unit Testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@29bd9290ef037a3ecbdafe83cbd2185e9dd0fa0a # v20
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: "sandbox = false"
+
+      - name: Cache Nix
+        uses: cachix/cachix-action@v12
+        with:
+          name: plugin-cosmos
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      # TODO: We probably want cachix enabled heres
+      # https://github.com/goplugin/plugin-cosmos/issues/15
+
+      - name: Run unit tests
+        run: nix develop -c cargo unit-test --locked
+        env:
+          RUST_BACKTRACE: 1
+
+      - name: Compile WASM contract
+        run: nix develop -c cargo wasm --locked
+        env:
+          RUSTFLAGS: "-C link-arg=-s"
+
+  contracts_lint:
+    # TODO: reenable linting once we've updated contract syntax
+    if: false
+    name: Contracts Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@29bd9290ef037a3ecbdafe83cbd2185e9dd0fa0a # v20
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: "sandbox = false"
+
+      - name: Cache Nix
+        uses: cachix/cachix-action@v12
+        with:
+          name: plugin-cosmos
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Avoid using non-nix rust binaries
+        run: rm -rf ~/.cargo/bin
+
+      - name: Run cargo fmt
+        run: nix develop -c cargo fmt --all -- --check
+
+      - name: Run cargo check
+        run: nix develop -c cargo check
+
+      - name: Run cargo clippy
+        run: nix develop -c cargo clippy -- -D warnings
+
+      # TODO: Add schema checks
+      # https://github.com/goplugin/plugin-terra/issues/17

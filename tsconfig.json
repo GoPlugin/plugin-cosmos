@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./packages-ts/gauntlet-cosmos"
+    },
+    {
+      "path": "./packages-ts/gauntlet-cosmos-cw-plus"
+    },
+    {
+      "path": "./packages-ts/gauntlet-cosmos-contracts"
+    }
+  ]
+}
