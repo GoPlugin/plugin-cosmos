@@ -8,10 +8,14 @@ require (
 	github.com/google/uuid v1.4.0
 	github.com/lib/pq v1.10.9
 	github.com/rs/zerolog v1.30.0
-	github.com/goplugin/plugin-common v0.1.7-0.20231205033838-dfac15e672d4
+	github.com/goplugin/plugin-common v0.0.1
+	//github.com/goplugin/plugin-common v0.1.7-0.20231205033838-dfac15e672d4
 	github.com/goplugin/plugin-cosmos v0.4.1-0.20231205042618-bd88172cddd3
-	github.com/goplugin/plugin-cosmos/ops v0.0.0-20230615043323-5fe39e28b7ee
-	github.com/goplugin/plugin-testing-framework v1.20.0
+	//github.com/goplugin/plugin-cosmos v0.4.1-0.20231205042618-bd88172cddd3
+	github.com/goplugin/plugin-cosmos/ops v0.0.1 //plugin update changes
+	//github.com/goplugin/plugin-cosmos/ops v0.0.0-20230615043323-5fe39e28b7ee
+	//github.com/goplugin/plugin-testing-framework v1.20.0
+	github.com/goplugin/plugin-testing-framework v0.1.1
 	github.com/goplugin/pluginv3.0/integration-tests v2.1.1
 	//github.com/goplugin/pluginv3.0/integration-tests v0.0.0-20231205043820-1cd875f11d60
 	github.com/goplugin/pluginv3.0/v2 v2.1.1

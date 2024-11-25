@@ -18,8 +18,10 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.17.0
 	github.com/shopspring/decimal v1.3.1
-	github.com/goplugin/plugin-common v0.1.7-0.20231205033838-dfac15e672d4
-	github.com/goplugin/plugin-libocr v0.0.0-20230925165524-ffa38fe11ef8
+	github.com/goplugin/plugin-common v0.0.1
+	//github.com/goplugin/plugin-common v0.1.7-0.20231205033838-dfac15e672d4
+	github.com/goplugin/plugin-libocr v0.1.1//for plugin update changes
+	//github.com/goplugin/plugin-libocr v0.0.0-20230925165524-ffa38fe11ef8
 	github.com/stretchr/testify v1.8.4
 	github.com/tidwall/gjson v1.16.0
 	go.uber.org/multierr v1.11.0
@@ -193,4 +195,5 @@ replace (
 
 	// until merged upstream: https://github.com/mwitkow/grpc-proxy/pull/69
 	github.com/mwitkow/grpc-proxy => github.com/goplugin/grpc-proxy v0.0.0-20230731113816-f1be6620749f
+	//github.com/mwitkow/grpc-proxy => github.com/goplugin/grpc-proxy v0.0.0-20230731113816-f1be6620749f
 )
