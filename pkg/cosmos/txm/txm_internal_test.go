@@ -2,6 +2,7 @@ package txm
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"slices"
 	"testing"
@@ -13,13 +14,12 @@ import (
 	cosmostypes "github.com/cosmos/cosmos-sdk/types"
 	txtypes "github.com/cosmos/cosmos-sdk/types/tx"
 	"github.com/google/uuid"
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
+	commoncfg "github.com/goplugin/plugin-common/pkg/config"
 	"github.com/goplugin/plugin-common/pkg/logger"
-	"github.com/goplugin/plugin-common/pkg/utils"
 	"github.com/goplugin/plugin-common/pkg/utils/tests"
 
 	"github.com/goplugin/plugin-cosmos/pkg/cosmos/client"
@@ -311,7 +311,7 @@ func TestTxm(t *testing.T) {
 	t.Run("expired msgs", func(t *testing.T) {
 		ctx := tests.Context(t)
 		tc := new(mocks.ReaderWriter)
-		timeout, err := utils.NewDuration(1 * time.Millisecond)
+		timeout, err := commoncfg.NewDuration(1 * time.Millisecond)
 		require.NoError(t, err)
 		tcFn := func() (client.ReaderWriter, error) { return tc, nil }
 		two := int64(2)

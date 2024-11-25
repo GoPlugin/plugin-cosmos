@@ -4,14 +4,13 @@ import (
 	"cmp"
 	"context"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"slices"
 	"strings"
 	"time"
 
 	"github.com/gogo/protobuf/proto"
-	"github.com/jmoiron/sqlx"
-	"github.com/pkg/errors"
 
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 	"github.com/cometbft/cometbft/crypto/tmhash"
@@ -19,15 +18,16 @@ import (
 	txtypes "github.com/cosmos/cosmos-sdk/types/tx"
 	"github.com/cosmos/cosmos-sdk/x/bank/types"
 
+	"github.com/goplugin/plugin-common/pkg/logger"
+	"github.com/goplugin/plugin-common/pkg/loop"
+	"github.com/goplugin/plugin-common/pkg/services"
+	"github.com/goplugin/plugin-common/pkg/sqlutil"
+	"github.com/goplugin/plugin-common/pkg/utils"
+
 	"github.com/goplugin/plugin-cosmos/pkg/cosmos/adapters"
 	"github.com/goplugin/plugin-cosmos/pkg/cosmos/client"
 	"github.com/goplugin/plugin-cosmos/pkg/cosmos/config"
 	"github.com/goplugin/plugin-cosmos/pkg/cosmos/db"
-
-	"github.com/goplugin/plugin-common/pkg/logger"
-	"github.com/goplugin/plugin-common/pkg/loop"
-	"github.com/goplugin/plugin-common/pkg/services"
-	"github.com/goplugin/plugin-common/pkg/utils"
 )
 
 var (
@@ -40,7 +40,7 @@ type Txm struct {
 	services.StateMachine
 	newMsgs         chan struct{}
 	orm             *ORM
-	lggr            logger.Logger
+	lggr            logger.SugaredLogger
 	tc              func() (client.ReaderWriter, error)
 	keystoreAdapter *keystoreAdapter
 	stop, done      chan struct{}
@@ -49,13 +49,12 @@ type Txm struct {
 }
 
 // NewTxm creates a txm. Uses simulation so should only be used to send txes to trusted contracts i.e. OCR.
-func NewTxm(db *sqlx.DB, tc func() (client.ReaderWriter, error), gpe client.ComposedGasPriceEstimator, chainID string, cfg config.Config, ks loop.Keystore, lggr logger.Logger) *Txm {
-	lggr = logger.Named(lggr, "Txm")
+func NewTxm(ds sqlutil.DataSource, tc func() (client.ReaderWriter, error), gpe client.ComposedGasPriceEstimator, chainID string, cfg config.Config, ks loop.Keystore, lggr logger.Logger) *Txm {
 	keystoreAdapter := newKeystoreAdapter(ks, cfg.Bech32Prefix())
 	return &Txm{
 		newMsgs:         make(chan struct{}, 1), // buffered to hold one pending request while unblocking callers
-		orm:             NewORM(chainID, db),
-		lggr:            lggr,
+		orm:             NewORM(chainID, ds),
+		lggr:            logger.Sugared(lggr).Named("Txm"),
 		tc:              tc,
 		keystoreAdapter: keystoreAdapter,
 		stop:            make(chan struct{}),
@@ -84,7 +83,7 @@ func (txm *Txm) confirmAnyUnconfirmed(ctx context.Context) {
 		broadcasted, err := txm.orm.GetMsgsState(ctx, db.Broadcasted, txm.cfg.MaxMsgsPerBatch())
 		if err != nil {
 			// Should never happen but if so, theoretically can retry with a reboot
-			logger.Criticalw(txm.lggr, "unable to look for broadcasted but unconfirmed txes", "err", err)
+			txm.lggr.Criticalw("unable to look for broadcasted but unconfirmed txes", "err", err)
 			return
 		}
 		if len(broadcasted) == 0 {
@@ -92,7 +91,7 @@ func (txm *Txm) confirmAnyUnconfirmed(ctx context.Context) {
 		}
 		tc, err := txm.tc()
 		if err != nil {
-			logger.Criticalw(txm.lggr, "unable to get client for handling broadcasted but unconfirmed txes", "count", len(broadcasted), "err", err)
+			txm.lggr.Criticalw("unable to get client for handling broadcasted but unconfirmed txes", "count", len(broadcasted), "err", err)
 			return
 		}
 		msgsByTxHash := make(map[string]adapters.Msgs)
@@ -154,7 +153,7 @@ func unmarshalMsg(msgType string, raw []byte) (sdk.Msg, string, error) {
 		}
 		return &ms, ms.Sender, nil
 	}
-	return nil, "", errors.Errorf("unrecognized message type: %s", msgType)
+	return nil, "", fmt.Errorf("unrecognized message type: %s", msgType)
 }
 
 type msgValidator struct {
@@ -235,14 +234,14 @@ func (txm *Txm) sendMsgBatch(ctx context.Context) {
 		msg, sender, err2 := unmarshalMsg(m.Type, m.Raw)
 		if err2 != nil {
 			// Should be impossible given the check in Enqueue
-			logger.Criticalw(txm.lggr, "Failed to unmarshal msg, skipping", "err", err2, "msg", m)
+			txm.lggr.Criticalw("Failed to unmarshal msg, skipping", "err", err2, "msg", m)
 			continue
 		}
 		m.DecodedMsg = msg
 		_, err2 = sdk.AccAddressFromBech32(sender)
 		if err2 != nil {
 			// Should never happen, we parse sender on Enqueue
-			logger.Criticalw(txm.lggr, "Unable to parse sender", "err", err2, "sender", sender)
+			txm.lggr.Criticalw("Unable to parse sender", "err", err2, "sender", sender)
 			continue
 		}
 		msgsByFrom[sender] = append(msgsByFrom[sender], m)
@@ -252,7 +251,7 @@ func (txm *Txm) sendMsgBatch(ctx context.Context) {
 	gasPrice, err := txm.GasPrice()
 	if err != nil {
 		// Should be impossible
-		logger.Criticalw(txm.lggr, "Failed to get gas price", "err", err)
+		txm.lggr.Criticalw("Failed to get gas price", "err", err)
 		return
 	}
 	for s, msgs := range msgsByFrom {
@@ -266,13 +265,12 @@ func (txm *Txm) sendMsgBatch(ctx context.Context) {
 			return
 		}
 	}
-
 }
 
 func (txm *Txm) sendMsgBatchFromAddress(ctx context.Context, gasPrice sdk.DecCoin, sender sdk.AccAddress, msgs adapters.Msgs) error {
 	tc, err := txm.tc()
 	if err != nil {
-		logger.Criticalw(txm.lggr, "unable to get client", "err", err)
+		txm.lggr.Criticalw("unable to get client", "err", err)
 		return err
 	}
 	an, sn, err := tc.Account(sender)
@@ -361,7 +359,7 @@ func (txm *Txm) sendMsgBatchFromAddress(ctx context.Context, gasPrice sdk.DecCoi
 		}
 		if resp.TxResponse.TxHash != txHash {
 			// Should never happen
-			logger.Criticalw(txm.lggr, "txhash mismatch", "got", resp.TxResponse.TxHash, "want", txHash)
+			txm.lggr.Criticalw("txhash mismatch", "got", resp.TxResponse.TxHash, "want", txHash)
 		}
 		return nil
 	})

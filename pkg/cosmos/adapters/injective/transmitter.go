@@ -9,7 +9,7 @@ import (
 	"github.com/goplugin/plugin-common/pkg/logger"
 
 	"github.com/goplugin/plugin-cosmos/pkg/cosmos/adapters"
-	"github.com/goplugin/plugin-cosmos/pkg/cosmos/adapters/injective/median_report"
+	"github.com/goplugin/plugin-cosmos/pkg/cosmos/adapters/injective/medianreport"
 	chaintypes "github.com/goplugin/plugin-cosmos/pkg/cosmos/adapters/injective/types"
 )
 
@@ -25,14 +25,14 @@ type CosmosModuleTransmitter struct {
 
 func NewCosmosModuleTransmitter(
 	queryClient chaintypes.QueryClient,
-	feedId string,
+	feedID string,
 	sender cosmosSDK.AccAddress,
 	msgEnqueuer adapters.MsgEnqueuer,
 	lggr logger.Logger,
 ) *CosmosModuleTransmitter {
 	return &CosmosModuleTransmitter{
 		lggr:        lggr,
-		feedID:      feedId,
+		feedID:      feedID,
 		queryClient: queryClient,
 		msgEnqueuer: msgEnqueuer,
 		sender:      sender,
@@ -52,7 +52,7 @@ func (c *CosmosModuleTransmitter) Transmit(
 ) error {
 	// TODO: design how to decouple Cosmos reporting from reportingplugins of OCR2
 	// The reports are not necessarily numeric (see: titlerequest).
-	report, err := median_report.ParseReport(rawReport)
+	report, err := medianreport.ParseReport(rawReport)
 	if err != nil {
 		return err
 	}

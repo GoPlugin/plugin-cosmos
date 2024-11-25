@@ -1,13 +1,13 @@
-package median_report
+package medianreport
 
 import (
 	"errors"
-	fmt "fmt"
+	"fmt"
 	"math/big"
 	"sort"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	proto "github.com/gogo/protobuf/proto"
+	"github.com/gogo/protobuf/proto"
 
 	"github.com/goplugin/plugin-libocr/offchainreporting2/reportingplugin/median"
 	"github.com/goplugin/plugin-libocr/offchainreporting2/types"
@@ -86,7 +86,7 @@ func ParseReport(data []byte) (*injectivetypes.Report, error) {
 	var reportRaw injectivetypes.Report
 
 	if err := proto.Unmarshal(data, &reportRaw); err != nil {
-		err = fmt.Errorf("failed to unmarshal data as median_report.Report: %w", err)
+		err = fmt.Errorf("failed to unmarshal data as medianreport.Report: %w", err)
 		return nil, err
 	}
 

@@ -11,11 +11,12 @@ import (
 	"github.com/rs/zerolog/log"
 	"gopkg.in/guregu/null.v4"
 
-	"github.com/goplugin/plugin-cosmos/pkg/cosmos/params"
 	"github.com/goplugin/plugin-testing-framework/k8s/environment"
 	"github.com/goplugin/pluginv3.0/integration-tests/client"
 	"github.com/goplugin/pluginv3.0/v2/core/services/job"
 	"github.com/goplugin/pluginv3.0/v2/core/services/relay"
+
+	"github.com/goplugin/plugin-cosmos/pkg/cosmos/params"
 )
 
 type PluginClient struct {
@@ -26,6 +27,8 @@ type PluginClient struct {
 	bootstrapPeers []client.P2PData
 }
 
+var _ PluginClient = PluginClient{bTypeAttr: nil} // fix "field `bTypeAttr` is unused" lint
+
 // TODO: Remove env. See https://github.com/goplugin/plugin-cosmos/pull/350#discussion_r1298071289
 // CreateKeys Creates node keys and defines chain and nodes for each node
 func NewPluginClient(env *environment.Environment, nodeName string, chainId string, tendermintURL string, bech32Prefix string) (*PluginClient, error) {
@@ -33,7 +36,7 @@ func NewPluginClient(env *environment.Environment, nodeName string, chainId stri
 	if err != nil {
 		return nil, err
 	}
-	if nodes == nil || len(nodes) == 0 {
+	if len(nodes) == 0 {
 		return nil, errors.New("No connected nodes")
 	}
 
@@ -42,7 +45,7 @@ func NewPluginClient(env *environment.Environment, nodeName string, chainId stri
 		return nil, err
 	}
 
-	if nodeKeys == nil || len(nodeKeys) == 0 {
+	if len(nodeKeys) == 0 {
 		return nil, errors.New("No node keys")
 	}
 
@@ -105,13 +108,13 @@ func (cc *PluginClient) CreateJobsForContract(chainId, nodeName, p2pPort, mockUr
 
 	// Defining relay config
 	bootstrapRelayConfig := job.JSONConfig{
-		"nodeName": fmt.Sprintf("\"%s\"", nodeName),
-		"chainID":  fmt.Sprintf("\"%s\"", chainId),
+		"nodeName": nodeName,
+		"chainID":  chainId,
 	}
 
 	oracleSpec := job.OCR2OracleSpec{
 		ContractID:                  ocrControllerAddress,
-		Relay:                       relay.Cosmos,
+		Relay:                       relay.NetworkCosmos,
 		RelayConfig:                 bootstrapRelayConfig,
 		ContractConfigConfirmations: 1, // don't wait for confirmation on devnet
 	}
@@ -155,7 +158,7 @@ func (cc *PluginClient) CreateJobsForContract(chainId, nodeName, p2pPort, mockUr
 
 		oracleSpec = job.OCR2OracleSpec{
 			ContractID:                  ocrControllerAddress,
-			Relay:                       relay.Cosmos,
+			Relay:                       relay.NetworkCosmos,
 			RelayConfig:                 relayConfig,
 			PluginType:                  "median",
 			OCRKeyBundleID:              null.StringFrom(cc.NodeKeys[nIdx].OCR2Key.Data.ID),

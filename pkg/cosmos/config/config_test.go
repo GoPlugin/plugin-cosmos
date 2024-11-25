@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/goplugin/plugin-common/pkg/config"
+
 	"github.com/goplugin/plugin-cosmos/pkg/cosmos/db"
 )
 

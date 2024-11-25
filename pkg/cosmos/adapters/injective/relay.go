@@ -6,14 +6,15 @@ import (
 
 	tmtypes "github.com/cosmos/cosmos-sdk/client/grpc/tmservice"
 	cosmosSDK "github.com/cosmos/cosmos-sdk/types"
-	"github.com/goplugin/plugin-common/pkg/logger"
-	relaytypes "github.com/goplugin/plugin-common/pkg/types"
-	"github.com/goplugin/plugin-common/pkg/utils"
 	"github.com/goplugin/plugin-libocr/offchainreporting2/reportingplugin/median"
 	"github.com/goplugin/plugin-libocr/offchainreporting2/types"
 
+	"github.com/goplugin/plugin-common/pkg/logger"
+	relaytypes "github.com/goplugin/plugin-common/pkg/types"
+	"github.com/goplugin/plugin-common/pkg/utils"
+
 	"github.com/goplugin/plugin-cosmos/pkg/cosmos/adapters"
-	"github.com/goplugin/plugin-cosmos/pkg/cosmos/adapters/injective/median_report"
+	"github.com/goplugin/plugin-cosmos/pkg/cosmos/adapters/injective/medianreport"
 	injectivetypes "github.com/goplugin/plugin-cosmos/pkg/cosmos/adapters/injective/types"
 	"github.com/goplugin/plugin-cosmos/pkg/cosmos/client"
 )
@@ -33,7 +34,7 @@ type configProvider struct {
 	feedID          string
 }
 
-func NewConfigProvider(ctx context.Context, lggr logger.Logger, chain adapters.Chain, args relaytypes.RelayArgs) (*configProvider, error) {
+func NewConfigProvider(lggr logger.Logger, chain adapters.Chain, args relaytypes.RelayArgs) (*configProvider, error) {
 	var relayConfig adapters.RelayConfig
 	err := json.Unmarshal(args.RelayConfig, &relayConfig)
 	if err != nil {
@@ -101,13 +102,13 @@ type medianProvider struct {
 	transmitter types.ContractTransmitter
 }
 
-func NewMedianProvider(ctx context.Context, lggr logger.Logger, chain adapters.Chain, rargs relaytypes.RelayArgs, pargs relaytypes.PluginArgs) (relaytypes.MedianProvider, error) {
-	configProvider, err := NewConfigProvider(ctx, lggr, chain, rargs)
+func NewMedianProvider(lggr logger.Logger, chain adapters.Chain, rargs relaytypes.RelayArgs, pargs relaytypes.PluginArgs) (relaytypes.MedianProvider, error) {
+	configProvider, err := NewConfigProvider(lggr, chain, rargs)
 	if err != nil {
 		return nil, err
 	}
 
-	reportCodec := median_report.ReportCodec{}
+	reportCodec := medianreport.ReportCodec{}
 	injectiveClient := configProvider.injectiveClient
 	contract := NewCosmosMedianReporter(configProvider.feedID, injectiveClient)
 	senderAddr, err := cosmosSDK.AccAddressFromBech32(pargs.TransmitterID)
@@ -139,6 +140,10 @@ func (p *medianProvider) OnchainConfigCodec() median.OnchainConfigCodec {
 	return median.StandardOnchainConfigCodec{}
 }
 
-func (p *medianProvider) ChainReader() relaytypes.ChainReader {
+func (p *medianProvider) ContractReader() relaytypes.ContractReader {
+	return nil
+}
+
+func (p *medianProvider) Codec() relaytypes.Codec {
 	return nil
 }

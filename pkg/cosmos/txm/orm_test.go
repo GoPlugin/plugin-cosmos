@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/goplugin/plugin-common/pkg/utils/tests"
+
 	cosmosdb "github.com/goplugin/plugin-cosmos/pkg/cosmos/db"
 )
 

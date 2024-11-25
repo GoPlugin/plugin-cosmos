@@ -1,12 +1,12 @@
 package client
 
 import (
+	"errors"
 	"fmt"
 	"math/big"
 
 	"github.com/goplugin/plugin-common/pkg/fee"
 	"github.com/goplugin/plugin-common/pkg/logger"
-	"go.uber.org/multierr"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
@@ -115,7 +115,7 @@ type ComposedGasPriceEstimator struct {
 }
 
 func NewMustGasPriceEstimator(estimators []GasPricesEstimator, lggr logger.Logger) *ComposedGasPriceEstimator {
-	return &ComposedGasPriceEstimator{estimators: estimators, lggr: lggr}
+	return &ComposedGasPriceEstimator{estimators: estimators, lggr: logger.Named(lggr, "ComposedGasPriceEstimator")}
 }
 
 func (gpe *ComposedGasPriceEstimator) GasPrices() map[string]sdk.DecCoin {
@@ -124,7 +124,7 @@ func (gpe *ComposedGasPriceEstimator) GasPrices() map[string]sdk.DecCoin {
 	for _, estimator := range gpe.estimators {
 		latestPrices, err := estimator.GasPrices()
 		if err != nil {
-			finalError = multierr.Combine(finalError, err)
+			finalError = errors.Join(finalError, err)
 			gpe.lggr.Warnf("error using estimator, trying next one, err %v", err)
 			continue
 		}
