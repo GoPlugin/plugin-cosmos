@@ -6,7 +6,8 @@ toolchain go1.23.2
 
 require (
 	github.com/rs/zerolog v1.30.0
-	github.com/goplugin/plugin-testing-framework/lib v1.50.9
+	github.com/goplugin/plugin-testing-framework/lib v0.3.1 //plugin update changes
+	//github.com/goplugin/plugin-testing-framework/lib v1.50.9
 )
 
 require (

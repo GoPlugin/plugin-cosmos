@@ -18,8 +18,10 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.2
 	github.com/prometheus/client_golang v1.20.0
 	github.com/shopspring/decimal v1.4.0
-	github.com/goplugin/plugin-common v0.3.0
-	github.com/goplugin/plugin-libocr v0.0.0-20241007185508-adbe57025f12
+	github.com/goplugin/plugin-common v0.0.1
+	//github.com/goplugin/plugin-common v0.0.1
+	github.com/goplugin/plugin-libocr v0.1.1// for plugin update changes
+	//github.com/goplugin/plugin-libocr v0.0.0-20241007185508-adbe57025f12
 	github.com/stretchr/testify v1.9.0
 	github.com/tidwall/gjson v1.17.0
 	go.uber.org/ratelimit v0.3.0
@@ -180,7 +182,8 @@ require (
 	github.com/sasha-s/go-deadlock v0.3.1 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/shirou/gopsutil/v3 v3.24.3 // indirect
-	github.com/goplugin/grpc-proxy v0.0.0-20240830132753-a7e17fec5ab7 // indirect
+	github.com/goplugin/grpc-proxy v0.1.1 //plugin update changes
+	//github.com/goplugin/grpc-proxy v0.0.0-20240830132753-a7e17fec5ab7 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect

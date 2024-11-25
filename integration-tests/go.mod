@@ -10,13 +10,20 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/lib/pq v1.10.9
 	github.com/rs/zerolog v1.33.0
-	github.com/goplugin/plugin-common v0.3.0
-	github.com/goplugin/plugin-cosmos v0.5.1
-	github.com/goplugin/plugin-cosmos/ops v0.0.0-20231206164210-03f8b219402e
-	github.com/goplugin/plugin-testing-framework/lib v1.50.11-0.20241011153842-b2804aed25b4
-	github.com/goplugin/pluginv3.0/integration-tests v0.0.0-20241012135014-37f3132362ec
-	github.com/goplugin/pluginv3.0 v2.14.0-mercury-20240807.0.20241012135014-37f3132362ec
-	github.com/goplugin/plugin-libocr v0.0.0-20241007185508-adbe57025f12
+	github.com/goplugin/plugin-common v0.0.1 //plugin update changes
+	//github.com/goplugin/plugin-common v0.3.0
+	github.com/goplugin/plugin-cosmos v0.0.2 //fir plugin update changes
+	//github.com/goplugin/plugin-cosmos v0.5.1
+	github.com/goplugin/plugin-cosmos/ops v0.0.1//fir plugin update changes
+	//github.com/goplugin/plugin-cosmos/ops v0.0.0-20231206164210-03f8b219402e
+	github.com/goplugin/plugin-testing-framework/lib v0.4.1 //for plugin update changes
+	//github.com/goplugin/plugin-testing-framework/lib v1.50.11-0.20241011153842-b2804aed25b4
+	github.com/goplugin/pluginv3.0/integration-tests v2.1.1 //for plugin upadte changes
+	//github.com/goplugin/pluginv3.0/integration-tests v0.0.0-20241012135014-37f3132362ec
+	github.com/goplugin/pluginv3.0 v2.1.1//for plugin update changes
+	//github.com/goplugin/pluginv3.0 v2.14.0-mercury-20240807.0.20241012135014-37f3132362ec
+	github.com/goplugin/plugin-libocr v0.1.1//for plugin update changes
+	//github.com/goplugin/plugin-libocr v0.0.0-20241007185508-adbe57025f12
 	github.com/stretchr/testify v1.9.0
 	gopkg.in/guregu/null.v4 v4.0.0
 )
@@ -268,8 +275,10 @@ require (
 	github.com/shoenig/go-m1cpu v0.1.6 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
-	github.com/goplugin/grpc-proxy v0.0.0-20240830132753-a7e17fec5ab7 // indirect
-	github.com/goplugin/wsrpc v0.8.2 // indirect
+	github.com/goplugin/grpc-proxy v0.1.1 //plugin update changes
+	//github.com/goplugin/grpc-proxy v0.0.0-20240830132753-a7e17fec5ab7 // indirect
+	github.com/goplugin/wsrpc v0.1.1 //plugin update changes
+	//github.com/goplugin/wsrpc v0.8.2 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
